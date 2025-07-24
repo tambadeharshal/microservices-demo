@@ -19,13 +19,12 @@ stages:
   displayName: Build image
   jobs:
   - job: Build
-    displayName: Build
     displayName: microservices_deployment
-
     pool:
       vmImage: ubuntu-latest
     steps:
-    - task: Docker@2
+      task: Docker@2
+      #task: kubernetesmManiffest@1
       displayName: Build an image
       inputs:
         action: "deploy"

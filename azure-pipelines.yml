@@ -1,33 +1,24 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+# yaml aks pipeline
 
 trigger:
 - main
 
 pool:
-  vmImage: "ubantu-latest"
+ vmImage: "ubuntu-latest"
 
-resources:
-- repo: self
+ # s2 j2 s
+ stages:
+   - stage:
+     displayName: aks_deployment
+     jobs:
+       - job
+          displayName:microservices_deployment
+          steps:
 
-variables:
-  tag: '$(Build.BuildId)'
-
-stages:
-- stage: Build
-  displayName: Build image
-  jobs:
-  - job: Build
-    displayName: microservices_deployment
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-      task: Docker@2
-      displayName: Build an image
-      inputs:
-        action: "deploy"
-        command: build
-        dockerfile: 'dployment.yaml'
-        tags: |
-          $(tag)
+            - task: kubernetesManifest@1
+              inputs:
+                action: 'deploy'
+                connectionType: 'kubernetesServiceConnection'
+                kubernetesServiceConnection: 'aks-conn'
+                namespace: 'class-ns'
+                manifests: 'release/kubernetes-manifests.yaml'
